@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\CRM",
+    "\\CRM\\Controllers",
+    "\\CRM\\Views",
+    "\\CRM\\Views\\Customer",
+    "\\CRM\\Views\\Shared"
+  ],
+  "SelectedNode": "\\CRM\\Startup.cs",
+  "PreviewInSolutionExplorer": false
+}

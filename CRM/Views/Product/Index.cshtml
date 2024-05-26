@@ -1,0 +1,62 @@
+﻿@model IPagedList<Product>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+@inject SignInManager<AppUser> SignInManager
+<h1>Ürünler</h1>
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Ürün Adı</th>
+        <th>Ürün Fiyatı</th>
+        <th>Ürün Durumu</th>
+        <th>Ürünü Güncelle</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.ProductId</td>
+            <td>@item.ProductName</td>
+            <td>@item.ProductPrice TL</td>
+            @if (item.ProductStatus == 0)
+            {
+                <td> <center> <a href="/Product/UpdateProductId/@item.ProductId?status=1" class="btn btn-outline-danger">Pasifleştir</a> </center> </td>
+            }
+            else
+            {
+                <td> <center> <a href="/Product/UpdateProductId/@item.ProductId?status=0" class="btn btn-outline-success">Aktifleştir</a> </center> </td>
+            }
+            <td> <center> <a href="/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Güncelle</a> </center> </td>
+        </tr>
+    }
+</table>
+@if (SignInManager.Context.User.IsInRole("Yönetici"))
+{
+    <a href="/Product/AddProduct" class="btn btn-primary" style="float:right">Yeni Ürün Ekle</a>
+}
+<div class="pull-left">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+    new
+    {
+    page
+
+    }),
+    new PagedListRenderOptionsBase
+    {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" },
+    Display = PagedListDisplayMode.IfNeeded
+
+    })
+</div>
+
+
+
+
+

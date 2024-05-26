@@ -1,0 +1,93 @@
+﻿@model List<Sale>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<h3>Hoşgeldin, @ViewBag.user</h3>
+<hr />
+<br />
+
+@******COLUMN CHART******@
+<h5 style="color:#1e7898; text-align:center">Ürün Satış Miktarları</h5>
+<br />
+<div style="width: 80%; margin: 0 auto;">
+    <canvas id="salesChart"></canvas>
+</div>
+<script>
+    // Verileri dinamik olarak almak için bir JavaScript kodu
+    var xValues = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewBag.xValue));
+    var yValues = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@ViewBag.yValue));
+
+    // Chart.js ile satış grafiğini oluşturma
+    var ctx = document.getElementById('salesChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: xValues,
+            datasets: [{
+                label: 'Satış Sayısı',
+                data: yValues,
+                backgroundColor: 'rgba(203, 13, 158, 0.2)',
+                borderColor: 'rgba(203, 13, 158, 0.5)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<br />
+<br />
+<br />
+
+
+@******LOG SCALE CHART******@
+<h5 style="color:#1e7898; text-align:center">Aylık Kazanç Toplamı</h5>
+
+<div id="logScaleChart" style="width: 90%; height: 400px; margin: 0 auto;"></div>
+<script type="text/javascript">
+    // Load the Google Charts library
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawLogScaleChart);
+
+    // Function to draw the log scale chart
+    function drawLogScaleChart() {
+        // Get the data from ViewBag
+        var xScaleValue = @Html.Raw(Json.Serialize(ViewBag.xScaleValue));
+        var yScaleValue = @Html.Raw(Json.Serialize(ViewBag.yScaleValue));
+
+        // Create the data table
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Ay');
+        data.addColumn('number', 'Toplam Kazanç');
+
+        for (var i = 0; i < xScaleValue.length; i++) {
+            data.addRow([new Date(xScaleValue[i]), yScaleValue[i]]);
+        }
+
+        // Set chart options
+        var options = {
+            backgroundColor: "#f8f8fb",
+            hAxis: {
+            },
+            vAxis: {
+                logScale: true // Enable log scale on the vertical axis
+            },
+            legend: { position: 'bottom' },
+            chartArea: { width: '80%', height: '70%' }
+        };
+
+        // Create and draw the chart
+        var chart = new google.visualization.LineChart(document.getElementById('logScaleChart'));
+        chart.draw(data, options);
+    }
+</script>
+<br />
+

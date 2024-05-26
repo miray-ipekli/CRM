@@ -1,0 +1,56 @@
+﻿@model IPagedList<Sale>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+@inject SignInManager<AppUser> SignInManager
+<h1>Yapılan Satışlar</h1>
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Ürün Adı</th>
+        <th>Ürün Fiyatı</th>
+        <th>Müşteri Adı</th>
+        <th>Satış Tarihi</th>
+        <th>Satışı Sil</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.SaleId</td>
+            <td>@item.Product.ProductName</td>
+            <td>@item.Product.ProductPrice</td>
+            <td>@item.Customer.CustomerName @item.Customer.CustomerSurname</td>
+            <td>@item.SaleDate.ToString("dd MMMM yyyy")</td>
+            <td> <center> <a href="/Sale/DeleteSale/@item.SaleId" class="btn btn-danger">Sil</a> </center> </td>
+        </tr>
+    }
+</table>
+@if (SignInManager.Context.User.IsInRole("Yönetici"))
+{
+    <a href="/Sale/AddSale" class="btn btn-primary" style="float:right">Yeni Satış Ekle</a>
+}
+<div class="pull-left">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+    new
+    {
+    page
+
+    }),
+    new PagedListRenderOptionsBase
+    {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" },
+    Display = PagedListDisplayMode.IfNeeded
+
+    })
+</div>
+
+
+
+

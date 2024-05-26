@@ -1,0 +1,41 @@
+﻿@model CRM.Models.UserEditViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+
+<h1>Profil Bilgilerimi Güncelle</h1>
+<form method="post">
+    @Html.Label("Adınız")
+    <input type="text" asp-for="Name" class="form-control" readonly/>
+    <br />
+
+    @Html.Label("Soyadınız")
+    <input type="text" asp-for="Surname" class="form-control" readonly />
+    <br />
+
+    @Html.Label("Kullanıcı Adınız")
+    <input type="text" asp-for="UserName" class="form-control" readonly />
+    <br />
+
+    @Html.Label("E-Postanız")
+    <input type="text" asp-for="Mail" class="form-control" required oninput="validateEmail(event)" />
+    <br />
+
+    @Html.Label("Telefon Numaranız")
+    <input type="text" asp-for="PhoneNumber" class="form-control" required oninput="validatePhoneNumber(event)" />
+    <br />
+
+    @Html.Label("Şifreniz")
+    <input type="password" asp-for="Password" class="form-control" />
+    <br />
+
+    @Html.Label("Şifre Tekrar")
+    <input type="password" asp-for="ConfirmPassword" class="form-control" />
+    <br />
+
+    <button class="btn btn-primary">Bilgilerimi Güncelle</button>
+
+</form>
+

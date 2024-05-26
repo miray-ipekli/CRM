@@ -1,0 +1,66 @@
+﻿@model IPagedList<AppUser>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+@inject SignInManager<AppUser> SignInManager
+<h1>Çalışanlar</h1>
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Ad Soyad</th>
+        <th>E-Posta</th>
+        <th>Telefon</th>
+         @if (SignInManager.Context.User.IsInRole("Yönetici"))
+        {
+            <th>Çalışan Durumu</th>
+        }
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name @item.Surname</td>
+            <td>@item.Email</td>
+            <td>@item.PhoneNumber</td>
+            @if (SignInManager.Context.User.IsInRole("Yönetici"))
+            {
+                @if (item.Status == 0)
+                {
+                    <td> <center> <a href="/Employee/UpdateEmployee/@item.Id?status=1" class="btn btn-outline-danger">Pasifleştir</a> </center> </td>
+                }
+                else 
+                {
+                    <td> <center> <a href="/Employee/UpdateEmployee/@item.Id?status=0" class="btn btn-outline-success">Aktifleştir</a> </center> </td>
+                }
+            }
+        </tr>
+    }
+</table>
+@if (SignInManager.Context.User.IsInRole("Yönetici"))
+{
+    <a href="/Employee/AddEmployee" class="btn btn-primary" style="float:right">Yeni Çalışan Ekle</a>
+}
+
+<div class="pull-left">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+    new
+    {
+    page
+
+    }),
+    new PagedListRenderOptionsBase
+    {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" },
+    Display = PagedListDisplayMode.IfNeeded
+
+    })
+</div>
+
+
+

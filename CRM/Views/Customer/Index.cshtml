@@ -1,0 +1,64 @@
+﻿@model IPagedList<Customer>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+@inject SignInManager<AppUser> SignInManager
+<h1>Müşteriler</h1>
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Ad Soyad</th>
+        <th>E-Posta</th>
+        <th>Telefon</th>
+        <th>Müşteri Durumu</th>
+        <th>Müşteri Güncelle</th>
+        <th>Müşteri İletişim</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.CustomerId</td>
+            <td>@item.CustomerName @item.CustomerSurname</td>
+            <td>@item.CustomerEmail</td>
+            <td>@item.CustomerPhone</td>
+            @if (item.CustomerStatus == 0)
+            {
+                <td> <center> <a href="/Customer/UpdateCustomerId/@item.CustomerId?status=1" class="btn btn-outline-danger">Pasifleştir</a> </center> </td>
+            }
+            else
+            {
+                <td> <center> <a href="/Customer/UpdateCustomerId/@item.CustomerId?status=0" class="btn btn-outline-success">Aktifleştir</a> </center> </td>
+            }
+            <td> <a href="/Customer/UpdateCustomer/@item.CustomerId" class="btn btn-success">Güncelle</a> </td>
+            <td> <a href="mailto:@item.CustomerEmail" class="btn btn-info">Mail Gönder</a> </td>
+        </tr>
+    }
+</table>
+@if (SignInManager.Context.User.IsInRole("Yönetici"))
+{
+    <a href="/Customer/AddCustomer" class="btn btn-primary" style="float:right">Yeni Müşteri Ekle</a>
+}
+<div class="pull-left">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",
+    new
+    {
+    page
+
+    }),
+    new PagedListRenderOptionsBase
+    {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" },
+    Display = PagedListDisplayMode.IfNeeded
+
+    })
+</div>
+
+
+
+

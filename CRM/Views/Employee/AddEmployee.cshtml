@@ -1,0 +1,89 @@
+﻿@model CRM.Models.UserRegisterViewModel
+@{
+    ViewData["Title"] = "AddEmployee";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<h1>Çalışan Ekle</h1>
+<form method="post">
+    <div class="form-group">
+        @Html.Label("Çalışan Adı")
+        <input type="text" asp-for="Name" class="form-control" required oninput="validateInput(event)" />
+    </div>
+    <div class="form-group">
+        @Html.Label("Çalışan Soyadı")
+        <input type="text" asp-for="Surname" class="form-control" required oninput="validateSurname(event)" />
+    </div>
+    <div class="form-group">
+        @Html.Label("Çalışan E-Postası")
+        <input type="text" asp-for="Mail" class="form-control" required oninput="validateEmail(event)" />
+    </div>
+    <div class="form-group">
+        @Html.Label("Çalışan Telefonu")
+        <input type="text" asp-for="PhoneNumber" class="form-control" required oninput="validatePhoneNumber(event)" />
+    </div>
+    <div class="form-group">
+        @Html.Label("Çalışan Şifresi")
+        <input type="password" asp-for="Password" class="form-control" required />
+    </div>
+    <div class="form-group">
+        @Html.Label("Çalışan Şifre Tekrar")
+        <input type="password" asp-for="ConfirmPassword" class="form-control" required/>
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    @*Şifre kuralları için uyarı veriyor. Yalnızca eksik olanı söylüyor.*@
+    @*Örneğin m123 yazarsam -> büyük harf ve özel karakter uyarısı veriyor.*@
+    @*sadece divi yazarsam ingilizce şekilde uyarı veriyor.*@
+    <div class="text-danger" asp-validation-summary="ModelOnly">
+    </div>
+    <button class="btn btn-outline-success">Çalışanı Ekle</button>
+</form>
+
+
+<script>
+    function validateInput(event) {
+        const inputValue = event.target.value;
+        const regex = /^[a-zA-ZüÜğĞşŞıİöÖçÇ]+$/;
+
+        if (!regex.test(inputValue)) {
+            event.target.setCustomValidity("Sadece harf girilebilir.");
+        } else {
+            event.target.setCustomValidity("");
+        }
+    }
+    function validateSurname(event) {
+        const inputValue = event.target.value;
+        const regex = /^[a-zA-ZüÜğĞşŞıİöÖçÇ]+$/;
+
+        if (!regex.test(inputValue)) {
+            event.target.setCustomValidity("Sadece harf girilebilir.");
+        } else {
+            event.target.setCustomValidity("");
+        }
+    }
+    function validateEmail(event) {
+        const inputValue = event.target.value;
+        const emailRegex = /^[^\s]+[^\s]+\.[a-zA-ZüÜğĞşŞıİöÖçÇ]+$/;
+
+        if (!emailRegex.test(inputValue)) {
+            event.target.setCustomValidity("Geçerli bir e-posta adresi giriniz.");
+        } else {
+            event.target.setCustomValidity("");
+        }
+    }
+
+    function validatePhoneNumber(event) {
+        const inputValue = event.target.value;
+        const phoneRegex = /^\d{10}$/; // 10 haneli telefon numarası kabul ediliyor.
+
+        if (!phoneRegex.test(inputValue)) {
+            event.target.setCustomValidity("Geçerli bir telefon numarası giriniz (örn: 5533455667).");
+        } else {
+            event.target.setCustomValidity("");
+        }
+    }
+    
+
+
+</script>

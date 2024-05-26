@@ -1,0 +1,41 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "AddProduct";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+
+<h1>Yeni Ürün</h1>
+
+@using (Html.BeginForm("AddProduct", "Product", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.Label("Ürün Adı")
+        @Html.TextBoxFor(x=>x.ProductName, new{@class="form-control"})
+        @Html.ValidationMessageFor(x => x.ProductName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Ürün Fiyatı")
+        @Html.TextBoxFor(x=>x.ProductPrice, new{@class="form-control"})
+        @Html.ValidationMessageFor(x => x.ProductPrice, "", new { @class = "text-danger" })
+    </div>
+
+    <button class="btn btn-outline-success">Ürünü Ekle</button>
+}
+
+@*
+<form method="post">
+
+    <div class="form-group">
+        @Html.Label("Ürün Adı")
+        <input type="text" asp-for="ProductName" class="form-control" />
+    </div>
+    <div class="form-group">
+        @Html.Label("Ürün Fiyatı")
+        <input type="text" asp-for="ProductPrice" class="form-control" />
+    </div>
+
+    <button class="btn btn-outline-success">Ürünü Ekle</button>
+</form>
+*@

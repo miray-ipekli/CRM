@@ -1,0 +1,99 @@
+﻿@model IPagedList<EmployeeTask>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+@inject SignInManager<AppUser> SignInManager
+<h1>Görevler</h1>
+<table class="table table-bordered">
+    <tr>
+        <th>#</th>
+        <th>Görev</th>
+        <th>Görevli Çalışan</th>
+        <th>Görev Durumu</th>
+        <th>Görev Durumunu Güncelle</th>
+        <th>Detay</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.TaskId</td>
+            <td class="task-cell">
+                <a href="#" data-toggle="modal" data-target="#taskModal" data-task="@item.Task" data-task-description="@item.TaskDescription">
+                    @item.Task
+                </a>
+            </td>
+            <td>@item.AppUser.Name @item.AppUser.Surname</td>
+            <td>@item.TaskStatus</td>
+            @if (ViewBag.user == item.AppUser.Id)
+            {
+                @if (item.TaskStatus == "Yeni Görev")
+                {
+                    <td> <center> <a href="/Task/UpdateTask/@item.TaskId?status=Göreve Başlandı" class="btn btn-warning">Göreve Başladım</a> </center> </td>
+                }
+                else if (item.TaskStatus == "Devam Ediyor")
+                {
+                    <td> <center> <a href="/Task/UpdateTask/@item.TaskId?status=Tamamlandı" class="btn btn-success">Görevi Tamamladım</a> </center> </td>
+                }
+                else if (item.TaskStatus == "Görev Tamamlandı")
+                {
+                    <td><p style="text-align:center;">@item.CompletionDate.ToString("dd MMMM yyyy")</p></td>
+                }
+            }
+            else
+            {
+                if (item.AppUser.Status != 0)
+                {
+                    <td><p style="text-align:center; font-weight:bold; color:#b2b2b2;">Bu kullanıcı aktif değil.</p></td>
+                }
+                else
+                {
+                    <td><p style="text-align:center; font-weight:bold;">Görev size ait değil.</p></td>
+                }        
+            }
+            <td> <center> <a href="#" data-toggle="modal" data-target="#taskModal" data-task="@item.Task" data-task-description="@item.TaskDescription" class="btn btn-outline-info" >Detay</a></center> </td>
+        </tr>
+    }
+</table>
+@if (SignInManager.Context.User.IsInRole("Yönetici"))
+{
+    <a href="/Task/AddTask" class="btn btn-primary" style="float:right">Yeni Görev Ekle</a>
+}
+<div class="pull-left">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index",new{page}),
+    new PagedListRenderOptionsBase
+    {
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" },
+    Display = PagedListDisplayMode.IfNeeded
+
+    })
+</div>
+
+
+
+<!-- Modal bileşeni -->
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-task-description"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

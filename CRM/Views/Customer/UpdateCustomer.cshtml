@@ -1,0 +1,47 @@
+﻿@model Customer
+@{
+    ViewData["Title"] = "UpdateCustomer";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+
+<h1>Müşteri Bilgilerini Güncelle</h1>
+@using (Html.BeginForm("UpdateCustomer", "Customer", FormMethod.Post))
+{
+    <input type="hidden" asp-for="CustomerId" class="form-control" readonly />
+
+    <div class="form-group">
+        @Html.Label("Müşteri Adı")
+        @Html.TextBoxFor(x=>x.CustomerName, new{@class="form-control",  @readonly = "readonly"})
+        @Html.ValidationMessageFor(x => x.CustomerName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Müşteri Soyadı")
+        @Html.TextBoxFor(x=>x.CustomerSurname, new{@class="form-control",  @readonly = "readonly"})
+        @Html.ValidationMessageFor(x => x.CustomerSurname, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Müşteri Maili")
+        @Html.TextBoxFor(x=>x.CustomerEmail, new{@class="form-control" })
+        @Html.ValidationMessageFor(x => x.CustomerEmail, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Müşteri Telefonu")
+        @Html.TextBoxFor(x=>x.CustomerPhone, new{@class="form-control"})
+        @Html.ValidationMessageFor(x => x.CustomerPhone, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Müşteri Adresi")
+        @Html.TextAreaFor(x => x.CustomerAdress, new { @class = "form-control", rows = 4 })
+        @Html.ValidationMessageFor(x => x.CustomerAdress, "", new { @class = "text-danger" })
+    </div>
+
+    <button class="btn btn-primary">Bilgilerimi Güncelle</button>
+
+}
+
+
